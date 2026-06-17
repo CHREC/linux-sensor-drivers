@@ -321,10 +321,10 @@ static const char * const event_source_name[] = {
 
 #define ERC_MIN_EVENT_RATE 0
 #define ERC_MAX_EVENT_RATE \
-	((ERC_TD_EVENT_COUNT_MAX * 10000))
+	((ERC_TD_EVENT_COUNT_MAX * 1000000) / ERC_REF_PERIOD_DEFAULT)
 
 #define ERC_DEFAULT_EVENT_RATE \
-	((ERC_TD_EVENT_COUNT_DEFAULT * 10000))
+	((ERC_TD_EVENT_COUNT_DEFAULT * 1000000) / ERC_REF_PERIOD_DEFAULT)
 
 struct v4l2_ctrl_config erc_rate_ctrl = {
 	.id = PSEE_CID_ERC_RATE,

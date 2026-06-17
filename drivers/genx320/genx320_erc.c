@@ -6,12 +6,14 @@
 
 static u32 event_rate_to_event_count(u64 rate, u32 ref_period)
 {
-	return (rate * ref_period) / 1000000;
+	//return (rate * ref_period) / 1000000;
+	return div_u64(rate * ref_period, 1000000);
 }
 
 static u64 event_count_to_event_rate(u32 count, u32 ref_period)
 {
-	return (count * 1000000) / ref_period;
+	//return (count * 1000000) / ref_period;
+	return div_u64(count * 1000000, ref_period);
 }
 
 static int genx320_erc_set_evt_rate(struct psee_controls *controls, u32 ref_period,
