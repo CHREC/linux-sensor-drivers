@@ -316,15 +316,15 @@ static const char * const event_source_name[] = {
 
 // TODO: get values from driver
 #define ERC_REF_PERIOD_DEFAULT 100
-#define ERC_TD_EVENT_COUNT_MAX 20000
+#define ERC_TD_EVENT_COUNT_MAX 20000ll
 #define ERC_TD_EVENT_COUNT_DEFAULT 1000
 
 #define ERC_MIN_EVENT_RATE 0
 #define ERC_MAX_EVENT_RATE \
-	((ERC_TD_EVENT_COUNT_MAX * 1000000) / ERC_REF_PERIOD_DEFAULT)
+	((ERC_TD_EVENT_COUNT_MAX * 10000))
 
 #define ERC_DEFAULT_EVENT_RATE \
-	((ERC_TD_EVENT_COUNT_DEFAULT * 1000000) / ERC_REF_PERIOD_DEFAULT)
+	((ERC_TD_EVENT_COUNT_DEFAULT * 10000))
 
 struct v4l2_ctrl_config erc_rate_ctrl = {
 	.id = PSEE_CID_ERC_RATE,
