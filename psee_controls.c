@@ -316,7 +316,7 @@ static const char * const event_source_name[] = {
 
 // TODO: get values from driver
 #define ERC_REF_PERIOD_DEFAULT 100
-#define ERC_TD_EVENT_COUNT_MAX 20000ll
+#define ERC_TD_EVENT_COUNT_MAX 20000
 #define ERC_TD_EVENT_COUNT_DEFAULT 1000
 
 #define ERC_MIN_EVENT_RATE 0
