@@ -1511,36 +1511,42 @@ static int imx636_power_on(struct device *dev)
 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
 	struct imx636 *imx636 = to_imx636(sd);
 	int ret;
-
+	printk(KERN_WARNING "IMX636 POWER ON\n");
 	mutex_lock(&imx636->mutex);
 	dev_dbg(dev, "power-on sequence started");
 
+	printk(KERN_WARNING "IMX636 ENABLING POWER AND CLOCK\n");
 	ret = enable_power_and_clock(imx636);
 	if (ret)
 		goto error_enable_power_and_clock;
 	dev_dbg(dev, "power supplies and clocks enabled");
 
+	printk(KERN_WARNING "IMX636 CHECKING BOOT\n");
 	ret = imx636_check_boot(imx636);
 	if (ret)
 		goto error_checking_boot;
 	dev_dbg(dev, "boot magic check passed");
 
+	printk(KERN_WARNING "IMX636 INITIALIZING\n");
 	ret = imx636_init(imx636);
 	if (ret)
 		goto error_init;
 	dev_dbg(dev, "base configuration done");
 
+	printk(KERN_WARNING "IMX636 V4L2 CONTROL SETUP\n");
 	ret = __v4l2_ctrl_handler_setup(imx636->sd.ctrl_handler);
 	if (ret)
 		goto error_v4l2_ctrl_handler_setup;
 	dev_dbg(dev, "V4L2 controls applied");
 
+	printk(KERN_WARNING "IMX636 SET ROI\n");
 	ret = imx636_set_roi_rect(imx636, &imx636->crop);
 	if (ret)
 		goto error_set_roi_rect;
 	dev_dbg(dev, "region of interest applied");
 
 	mutex_unlock(&imx636->mutex);
+	printk(KERN_WARNING "IMX636 POWER ON DONE\n");
 	return 0;
 
 error_set_roi_rect:
@@ -1551,6 +1557,7 @@ error_checking_boot:
 	disable_power_and_clock(imx636);
 error_enable_power_and_clock:
 	mutex_unlock(&imx636->mutex);
+	printk(KERN_WARNING "IMX636 || FUCK ||\n");
 	return ret;
 }
 
