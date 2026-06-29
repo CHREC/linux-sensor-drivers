@@ -675,8 +675,10 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 	default:
 		return -EINVAL;
 	}
+	printk(KERN_WARNING "IMX636 APPLYING FORMAT: %x\n", edf_value);
 
 	ret = imx636_write_reg(imx636, IMX636_EDF_PIPELINE_CONTROL, edf_value);
+	printk(KERN_WARNING "IMX636 APPLYING FORMAT RET: %d\n", ret);
 	if (ret)
 		return ret;
 	imx636->format_code = format_code;
@@ -767,9 +769,10 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 		code = MEDIA_BUS_FMT_PSEE_EVT3;
 		break;
 	}
-
+	printk(KERN_WARNING "IMX636 FORMAT REAL: %x\n", code);
 	imx636_fill_pad_format(imx636, code, fmt);
-
+	printk(KERN_WARNING "IMX636 INITIALIZED: %d\n", imx636->initialized);
+	printk(KERN_WARNING "IMX636 FORMAT WHICH: %x\t%x\n", fmt->which, V4L2_SUBDEV_FORMAT_TRY);
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
 		struct v4l2_mbus_framefmt *framefmt;
 
