@@ -752,7 +752,7 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 	int ret = 0;
 
 	mutex_lock(&imx636->mutex);
-	dev_warn("IMX636 FORMAT: %x\n", fmt->format.code);
+	printk(KERN_WARNING "IMX636 FORMAT: %x\n", fmt->format.code);
 	switch (fmt->format.code) {
 	case MEDIA_BUS_FMT_PSEE_EVT21:
 	case MEDIA_BUS_FMT_PSEE_EVT21ME:
