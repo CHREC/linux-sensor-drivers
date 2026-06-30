@@ -611,6 +611,7 @@ static int imx636_enum_mbus_code(struct v4l2_subdev *sd,
 				 struct v4l2_subdev_state *sd_state,
 				 struct v4l2_subdev_mbus_code_enum *code)
 {
+	printk(KERN_WARNING "IMX636 ENUM MBUS CODE: %d\n", code->index);
 	switch (code->index) {
 	case 0:
 		code->code = MEDIA_BUS_FMT_PSEE_EVT3;
