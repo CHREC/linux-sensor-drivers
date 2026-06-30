@@ -784,10 +784,11 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 		ret = -EBUSY;
 	} else {
 		/* Directly apply the format if the sensor is already initialized */
-		if (imx636->initialized)
+		if (imx636->initialized || 1)
 			ret = imx636_apply_format(imx636, code);
 		else
 			imx636->format_code = code;
+			printk(KERN_WARNING "IMX636 FORMAT UNINIT: %x\n", imx636->format_code);
 	}
 	mutex_unlock(&imx636->mutex);
 
