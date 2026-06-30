@@ -780,6 +780,7 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 
 		framefmt = v4l2_subdev_get_try_format(sd, sd_state, fmt->pad);
 		*framefmt = fmt->format;
+		printk(KERN_WARNING "IMX636 SUBDEV TRY: %d\n", framefmt->code);
 	} else if (imx636->streaming) {
 		/* The output format can't be changed while streaming */
 		ret = -EBUSY;
