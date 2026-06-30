@@ -664,7 +664,7 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 	int ret;
 	u32 eoi_value;
 	u32 edf_value;
-
+	printk(KERN_WARNING "IMX636 APPLYING FORMAT: %x\n", format_code);
 	switch (format_code) {
 	case MEDIA_BUS_FMT_PSEE_EVT21:
 	case MEDIA_BUS_FMT_PSEE_EVT21ME:
@@ -676,7 +676,7 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 	default:
 		return -EINVAL;
 	}
-	printk(KERN_WARNING "IMX636 APPLYING FORMAT: %x\n", edf_value);
+	printk(KERN_WARNING "IMX636 APPLYING REAL FORMAT: %x\n", edf_value);
 
 	ret = imx636_write_reg(imx636, IMX636_EDF_PIPELINE_CONTROL, edf_value);
 	printk(KERN_WARNING "IMX636 APPLYING FORMAT RET: %d\n", ret);
@@ -774,6 +774,7 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 	imx636_fill_pad_format(imx636, code, fmt);
 	printk(KERN_WARNING "IMX636 INITIALIZED: %d\n", imx636->initialized);
 	printk(KERN_WARNING "IMX636 FORMAT WHICH: %x\t%x\n", fmt->which, V4L2_SUBDEV_FORMAT_TRY);
+	printk(KERN_WARNING "IMX636 STREAMING: %d\n", imx636->streaming);
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
 		struct v4l2_mbus_framefmt *framefmt;
 
@@ -784,7 +785,7 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 		ret = -EBUSY;
 	} else {
 		/* Directly apply the format if the sensor is already initialized */
-		if (imx636->initialized || 1)
+		if (1)//imx636->initialized)
 			ret = imx636_apply_format(imx636, code);
 		else
 			imx636->format_code = code;
