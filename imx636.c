@@ -1199,40 +1199,45 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 {
 	struct imx636 *imx636 = to_imx636(sd);
 	int ret;
-
+	printk(KERN_WARNING "IMX636 STREAING\n");
 	mutex_lock(&imx636->mutex);
 
 	if (imx636->streaming == enable) {
 		mutex_unlock(&imx636->mutex);
 		return 0;
 	}
-
+	printk(KERN_WARNING "IMX636 STREAING ENABLE: %d\n", enable);
 	if (enable) {
 		/* the sensor must be enabled, and the startup sequence locks the mutex too */
 		mutex_unlock(&imx636->mutex);
 		RET_ON(pm_runtime_resume_and_get(imx636->dev));
 		mutex_lock(&imx636->mutex);
-
+		printk(KERN_WARNING "IMX636 STREAING ENABLED\n");
 		/* I don't know if V4L2 core prevents two s_stream in parallel */
 		if (imx636->streaming == enable) {
+			printk(KERN_WARNING "IMX636 STREAM ALREADY ENABLED\n");
 			mutex_unlock(&imx636->mutex);
 			pm_runtime_put(imx636->dev);
 			return 0;
 		}
-
+		printk(KERN_WARNING "IMX636 STARTING STREAMING\n");
 		ret = imx636_start_streaming(imx636, imx636->pattern_ctrl->val);
 		if (ret) {
+			printk(KERN_WARNING "IMX636 STREAMING RETURNED: %d\n", ret);
 			mutex_unlock(&imx636->mutex);
 			pm_runtime_put(imx636->dev);
 			return ret;
 		}
 		imx636->streaming = true;
 		mutex_unlock(&imx636->mutex);
+		printk(KERN_WARNING "IMX636 STREAM DONE\n");
 	} else {
+		printk(KERN_WARNING "IMX636 STOPPING STREAMING\n");
 		imx636_stop_streaming(imx636);
 		imx636->streaming = false;
 		mutex_unlock(&imx636->mutex);
 		pm_runtime_put(imx636->dev);
+		printk(KERN_WARNING "IMX636 STOPPING STREAMING DONE\n");
 	}
 
 	return 0;
