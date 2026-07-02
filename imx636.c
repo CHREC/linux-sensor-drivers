@@ -947,7 +947,7 @@ static const struct link_timing *get_dphy_timings(struct imx636 *imx636)
 	freq = imx636->bus_cfg.link_frequencies[imx636->link_freq_ctrl->val];
 	for (i = 0; i < ARRAY_SIZE(link_timings); i++) {
 		if (freq == link_timings[i].line_freq) {
-			dev_dbg(imx636->dev, "using CSI-2 freq %llu Hz", freq);
+			dev_warn(imx636->dev, "using CSI-2 freq %llu Hz", freq);
 			return &link_timings[i];
 		}
 	}
