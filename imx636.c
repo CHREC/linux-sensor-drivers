@@ -280,7 +280,7 @@ union ro_lowpower_ctrl {
 #define MBX_BASE 0x400000
 
 #define IMX636_MBX_MISC (MBX_BASE + 0x010)
-#define IMX636_BOOT_MAGIC 3405692645//3405691582u
+#define IMX636_BOOT_MAGIC 3405691582u
 
 enum event_src {
 	PIXEL_ARRAY = 0,
@@ -786,7 +786,7 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 		ret = -EBUSY;
 	} else {
 		/* Directly apply the format if the sensor is already initialized */
-		if (1)//imx636->initialized)
+		if (imx636->initialized)
 			ret = imx636_apply_format(imx636, code);
 		else
 			imx636->format_code = code;
