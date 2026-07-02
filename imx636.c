@@ -408,6 +408,8 @@ static inline struct imx636 *to_imx636(struct v4l2_subdev *subdev)
  */
 static int imx636_read_reg(struct imx636 *imx636, u32 reg, u32 len, u32 *val)
 {
+	printk(KERN_WARNING "IMX636 READING FROM REG:0x%08X\n", reg);
+
 	struct i2c_client *client = v4l2_get_subdevdata(&imx636->sd);
 	struct i2c_msg xfer[2] = {0};
 	int i, ret;
@@ -431,6 +433,7 @@ static int imx636_read_reg(struct imx636 *imx636, u32 reg, u32 len, u32 *val)
 		for (i = 0; i < len; i++) {
 			val[i] = be32_to_cpu(val[i]);
 			dev_dbg(imx636->dev, "read 0x%x", val[i]);
+			printk(KERN_WARNING "IMX636 READ FROM REG:0x%08X VAL:0x%08X\n", reg, val[i]);
 		}
 		ret = 0;
 	}
@@ -448,6 +451,7 @@ static int imx636_read_reg(struct imx636 *imx636, u32 reg, u32 len, u32 *val)
  */
 static int imx636_write_reg(struct imx636 *imx636, u32 reg, const u32 val)
 {
+	printk(KERN_WARNING "IMX636 WRITING TO REG:0x%08X VAL:0x%08X\n", reg, val);
 	struct i2c_client *client = v4l2_get_subdevdata(&imx636->sd);
 	struct i2c_msg xfer = {0};
 	u32 buf[2] = {0};
@@ -467,6 +471,7 @@ static int imx636_write_reg(struct imx636 *imx636, u32 reg, const u32 val)
 		dev_warn(imx636->dev, "write ret %d", ret);
 		ret = (ret < 0) ? ret : -EIO;
 	}
+	printk(KERN_WARNING "IMX636 WROTE TO REG:0x%08X VAL:0x%08X\n", reg, val);
 
 	return ret;
 }
