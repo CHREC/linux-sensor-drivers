@@ -2052,6 +2052,10 @@ static int imx636_probe(struct i2c_client *client)
 	imx636->crop.width = PIXEL_ARRAY_WIDTH;
 	imx636->crop.height = PIXEL_ARRAY_HEIGHT;
 
+	uint readret;
+	readret = imx636_read_reg(imx636, IMX636_MBX_MISC, 1, &val);
+
+
 	pm_runtime_set_active(imx636->dev);
 	pm_runtime_enable(imx636->dev);
 	pm_runtime_idle(imx636->dev);
