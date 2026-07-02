@@ -2053,6 +2053,8 @@ static int imx636_probe(struct i2c_client *client)
 	imx636->crop.height = PIXEL_ARRAY_HEIGHT;
 
 	uint readret;
+	uint val;
+	val = 0;
 	readret = imx636_read_reg(imx636, IMX636_MBX_MISC, 1, &val);
 
 
