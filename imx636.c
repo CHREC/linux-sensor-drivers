@@ -616,7 +616,6 @@ static int imx636_enum_mbus_code(struct v4l2_subdev *sd,
 				 struct v4l2_subdev_state *sd_state,
 				 struct v4l2_subdev_mbus_code_enum *code)
 {
-	printk(KERN_WARNING "IMX636 ENUM MBUS CODE: %d\n", code->index);
 	switch (code->index) {
 	case 0:
 		code->code = MEDIA_BUS_FMT_PSEE_EVT3;
@@ -669,7 +668,6 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 	int ret;
 	u32 eoi_value;
 	u32 edf_value;
-	printk(KERN_WARNING "IMX636 APPLYING FORMAT: %x\n", format_code);
 	switch (format_code) {
 	case MEDIA_BUS_FMT_PSEE_EVT21:
 	case MEDIA_BUS_FMT_PSEE_EVT21ME:
@@ -681,10 +679,8 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 	default:
 		return -EINVAL;
 	}
-	printk(KERN_WARNING "IMX636 APPLYING REAL FORMAT: %x\n", edf_value);
 
 	ret = imx636_write_reg(imx636, IMX636_EDF_PIPELINE_CONTROL, edf_value);
-	printk(KERN_WARNING "IMX636 APPLYING FORMAT RET: %d\n", ret);
 	if (ret)
 		return ret;
 	imx636->format_code = format_code;
@@ -760,7 +756,6 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 	int ret = 0;
 
 	mutex_lock(&imx636->mutex);
-	printk(KERN_WARNING "IMX636 FORMAT: %x\n", fmt->format.code);
 	switch (fmt->format.code) {
 	case MEDIA_BUS_FMT_PSEE_EVT21:
 	case MEDIA_BUS_FMT_PSEE_EVT21ME:
@@ -775,17 +770,12 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 		code = MEDIA_BUS_FMT_PSEE_EVT3;
 		break;
 	}
-	printk(KERN_WARNING "IMX636 FORMAT REAL: %x\n", code);
 	imx636_fill_pad_format(imx636, code, fmt);
-	printk(KERN_WARNING "IMX636 INITIALIZED: %d\n", imx636->initialized);
-	printk(KERN_WARNING "IMX636 FORMAT WHICH: %x\t%x\n", fmt->which, V4L2_SUBDEV_FORMAT_TRY);
-	printk(KERN_WARNING "IMX636 STREAMING: %d\n", imx636->streaming);
 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
 		struct v4l2_mbus_framefmt *framefmt;
 
 		framefmt = v4l2_subdev_get_try_format(sd, sd_state, fmt->pad);
 		*framefmt = fmt->format;
-		printk(KERN_WARNING "IMX636 SUBDEV TRY: %d\n", framefmt->code);
 	} else if (imx636->streaming) {
 		/* The output format can't be changed while streaming */
 		ret = -EBUSY;
@@ -795,7 +785,6 @@ static int imx636_set_pad_format(struct v4l2_subdev *sd,
 			ret = imx636_apply_format(imx636, code);
 		else
 			imx636->format_code = code;
-			printk(KERN_WARNING "IMX636 FORMAT UNINIT: %x\n", imx636->format_code);
 	}
 	mutex_unlock(&imx636->mutex);
 
@@ -1342,7 +1331,7 @@ static int imx636_parse_hw_config(struct imx636 *imx636)
 		dev_info(imx636->dev, "setting fixed-size packets");
 		imx636->quirk_fixed_packet_size = true;
 	}
-
+	imx636->quirk_fixed_packet_size = true;
 	imx636->bus_cfg.bus_type = V4L2_MBUS_CSI2_DPHY;
 	ret = v4l2_fwnode_endpoint_alloc_parse(ep, &imx636->bus_cfg);
 	fwnode_handle_put(ep);
@@ -1525,42 +1514,35 @@ static int imx636_power_on(struct device *dev)
 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
 	struct imx636 *imx636 = to_imx636(sd);
 	int ret;
-	printk(KERN_WARNING "IMX636 POWER ON\n");
 	mutex_lock(&imx636->mutex);
 	dev_dbg(dev, "power-on sequence started");
 
-	printk(KERN_WARNING "IMX636 ENABLING POWER AND CLOCK\n");
 	ret = enable_power_and_clock(imx636);
 	if (ret)
 		goto error_enable_power_and_clock;
 	dev_dbg(dev, "power supplies and clocks enabled");
 
-	printk(KERN_WARNING "IMX636 CHECKING BOOT\n");
 	ret = imx636_check_boot(imx636);
 	if (ret)
 		goto error_checking_boot;
 	dev_dbg(dev, "boot magic check passed");
 
-	printk(KERN_WARNING "IMX636 INITIALIZING\n");
 	ret = imx636_init(imx636);
 	if (ret)
 		goto error_init;
 	dev_dbg(dev, "base configuration done");
 
-	printk(KERN_WARNING "IMX636 V4L2 CONTROL SETUP\n");
 	ret = __v4l2_ctrl_handler_setup(imx636->sd.ctrl_handler);
 	if (ret)
 		goto error_v4l2_ctrl_handler_setup;
 	dev_dbg(dev, "V4L2 controls applied");
 
-	printk(KERN_WARNING "IMX636 SET ROI\n");
 	ret = imx636_set_roi_rect(imx636, &imx636->crop);
 	if (ret)
 		goto error_set_roi_rect;
 	dev_dbg(dev, "region of interest applied");
 
 	mutex_unlock(&imx636->mutex);
-	printk(KERN_WARNING "IMX636 POWER ON DONE\n");
 	return 0;
 
 error_set_roi_rect:
