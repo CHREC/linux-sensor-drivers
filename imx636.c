@@ -964,12 +964,17 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 			imx636->bus_cfg.link_frequencies[imx636->link_freq_ctrl->val]);
 		return -EINVAL;
 	}
+		u32 tempVal;
 
 	/* Disable MIPI CSI-2 */
 	RET_ON(imx636_clear_reg(imx636, IMX636_MIPI_CONTROL, IMX636_MIPI_CSI_ENABLE));
 
 	/* Power down CSI-2 and D-PHY */
+		imx636_read_reg(imx636, IMX636_MIPI_STREAM, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 IMX636_MIPI_STREAM: 0x%08x\n", tempVal);
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_STREAM, 0));
+		imx636_read_reg(imx636, IMX636_MIPI_STREAM, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 IMX636_MIPI_STREAM: 0x%08x\n", tempVal);
 	RET_ON(imx636_clear_reg(imx636, IMX636_MIPI_ESCAPE_CTRL, IMX636_MIPI_ESCAPE_CLK_EN));
 	RET_ON(imx636_clear_reg(imx636, IMX636_MIPI_POWER, IMX636_MIPI_POWER_RST_W));
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_DPHY_POWER, 0));
@@ -1011,7 +1016,6 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 		return -EIO;
 	}
 
-	u32 tempVal;
 	imx636_read_reg(imx636, IMX636_MIPI_PL_RG_7, 1, &tempVal);
 	printk(KERN_WARNING "IMX636 MIPI PL RG 7: 0x%08x\n", tempVal);
 
@@ -1056,6 +1060,8 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 	}
 
 	/* Re-enable stream and control */
+	imx636_read_reg(imx636, IMX636_MIPI_STREAM, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 IMX636_MIPI_STREAM: 0x%08x\n", tempVal);
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_STREAM, 1));
 	imx636_read_reg(imx636, IMX636_MIPI_STREAM, 1, &tempVal);
 	printk(KERN_WARNING "IMX636 IMX636_MIPI_STREAM: 0x%08x\n", tempVal);
