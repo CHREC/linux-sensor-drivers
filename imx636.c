@@ -1010,6 +1010,11 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 		dev_err(imx636->dev, "Could not lock PLL");
 		return -EIO;
 	}
+
+	u32 tempVal;
+	imx636_read_reg(imx636, IMX636_MIPI_PL_RG_7, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 MIPI PL RG 7: 0x%08x\n", tempVal);
+
 	RET_ON(imx636_set_reg(imx636, IMX636_DV_CTRL, IMX636_DV_PC_CLKDIVEN));
 	RET_ON(imx636_set_reg(imx636, IMX636_DV_CTRL, IMX636_DV_PC_SYSCLKEN));
 	RET_ON(imx636_set_reg(imx636, IMX636_GLOBAL_CTRL, IMX636_SYS_CLK_EN));
@@ -1042,7 +1047,8 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_DPHY_POWER,
 		IMX636_MIPI_RG_BIASEN | IMX636_MIPI_RG_LPREGEN));
 	usleep_range(200, 300);
-
+	imx636_read_reg(imx636, IMX636_MIPI_DPHY_POWER, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 IMX636_MIPI_DPHY_POWER: 0x%08x\n", tempVal);
 	if (imx636->quirk_fixed_packet_size) {
 		/* Only close packet when MIPI_PACKET_SIZE is reached */
 		RET_ON(imx636_clear_reg(imx636, IMX636_MIPI_CONTROL,
@@ -1051,8 +1057,10 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 
 	/* Re-enable stream and control */
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_STREAM, 1));
+	imx636_read_reg(imx636, IMX636_MIPI_STREAM, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 IMX636_MIPI_STREAM: 0x%08x\n", tempVal);
 	RET_ON(imx636_set_reg(imx636, IMX636_MIPI_CONTROL, IMX636_MIPI_CSI_ENABLE));
-
+	printk(KERN_WARNING "IMX636 CSI-2 RECONFIGURED\n");
 	return 0;
 }
 
@@ -1155,6 +1163,11 @@ static int imx636_start_streaming(struct imx636 *imx636, enum event_src src)
 	default:
 		return -EINVAL;
 	}
+
+	u32 tempVal;
+	imx636_read_reg(imx636, IMX636_MIPI_PL_RG_7, 1, &tempVal);
+	printk(KERN_WARNING "IMX636 MIPI PL RG 7: 0x%08x\n", tempVal);
+
 	return 0;
 }
 
