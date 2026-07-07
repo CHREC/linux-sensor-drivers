@@ -280,7 +280,7 @@ union ro_lowpower_ctrl {
 #define MBX_BASE 0x400000
 
 #define IMX636_MBX_MISC (MBX_BASE + 0x010)
-#define IMX636_BOOT_MAGIC 3405692645u//3405691582u
+#define IMX636_BOOT_MAGIC 3405691582u
 
 enum event_src {
 	PIXEL_ARRAY = 0,
