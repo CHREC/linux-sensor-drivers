@@ -1238,7 +1238,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 		if (imx636->streaming == enable) {
 			printk(KERN_WARNING "IMX636 STREAM ALREADY ENABLED\n");
 			mutex_unlock(&imx636->mutex);
-			pm_runtime_put(imx636->dev);
+			//pm_runtime_put(imx636->dev);
 			return 0;
 		}
 		printk(KERN_WARNING "IMX636 STARTING STREAMING\n");
@@ -1246,7 +1246,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 		if (ret) {
 			printk(KERN_WARNING "IMX636 STREAMING RETURNED: %d\n", ret);
 			mutex_unlock(&imx636->mutex);
-			pm_runtime_put(imx636->dev);
+			//pm_runtime_put(imx636->dev);
 			return ret;
 		}
 		imx636->streaming = true;
@@ -1257,7 +1257,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 		imx636_stop_streaming(imx636);
 		imx636->streaming = false;
 		mutex_unlock(&imx636->mutex);
-		pm_runtime_put(imx636->dev);
+		//pm_runtime_put(imx636->dev);
 		printk(KERN_WARNING "IMX636 STOPPING STREAMING DONE\n");
 	}
 
