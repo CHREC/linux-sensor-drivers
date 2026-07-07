@@ -1241,6 +1241,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 			//pm_runtime_put(imx636->dev);
 			return 0;
 		}
+		imx636_stop_streaming(imx636);
 		printk(KERN_WARNING "IMX636 STARTING STREAMING\n");
 		ret = imx636_start_streaming(imx636, imx636->pattern_ctrl->val);
 		if (ret) {
@@ -1872,6 +1873,7 @@ static void create_end_of_frame_marker_controls(struct imx636 *imx636)
 
 static int pattern_s_ctrl(struct v4l2_ctrl *ctrl)
 {
+	printk(KERN_WARNING "IMX636 Setting Power Control\n");
 	struct imx636 *imx636 =
 		container_of(ctrl->handler, struct imx636, ctrls);
 
@@ -1880,8 +1882,9 @@ static int pattern_s_ctrl(struct v4l2_ctrl *ctrl)
 	 */
 	if (!imx636->streaming)
 		return 0;
-
+	printk(KERN_WARNING "IMX636 Stopping Streaming\n");
 	imx636_stop_streaming(imx636);
+	printk(KERN_WARNING "IMX636 Stopped Streaming\n");
 	return imx636_start_streaming(imx636, ctrl->val);
 }
 
