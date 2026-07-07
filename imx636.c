@@ -1550,21 +1550,25 @@ static int imx636_power_on(struct device *dev)
 	if (ret)
 		goto error_checking_boot;
 	dev_dbg(dev, "boot magic check passed");
+	imx636_check_boot(imx636);
 
 	ret = imx636_init(imx636);
 	if (ret)
 		goto error_init;
 	dev_dbg(dev, "base configuration done");
+	imx636_check_boot(imx636);
 
 	ret = __v4l2_ctrl_handler_setup(imx636->sd.ctrl_handler);
 	if (ret)
 		goto error_v4l2_ctrl_handler_setup;
 	dev_dbg(dev, "V4L2 controls applied");
-
+	imx636_check_boot(imx636);
 	ret = imx636_set_roi_rect(imx636, &imx636->crop);
 	if (ret)
 		goto error_set_roi_rect;
 	dev_dbg(dev, "region of interest applied");
+
+	imx636_check_boot(imx636);
 
 	mutex_unlock(&imx636->mutex);
 	return 0;
