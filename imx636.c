@@ -2071,12 +2071,12 @@ static int imx636_probe(struct i2c_client *client)
 	readret = imx636_read_reg(imx636, IMX636_MBX_MISC, 1, &val);
 
 
-	// pm_runtime_set_active(imx636->dev);
-	pm_runtime_enable(imx636->dev);
-	// pm_runtime_resume(imx636->dev);
-	//pm_runtime_idle(imx636->dev);
-	pm_runtime_forbid(imx636->dev);
-	// ret = imx636_power_on(imx636->dev);
+	pm_runtime_set_active(imx636->dev);
+	//pm_runtime_enable(imx636->dev);
+	pm_runtime_resume(imx636->dev);
+	pm_runtime_idle(imx636->dev);
+	//pm_runtime_forbid(imx636->dev);
+	ret = imx636_power_on(imx636->dev);
 	if(!ret)
 		return 0;
 
