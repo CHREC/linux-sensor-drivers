@@ -1231,7 +1231,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 	if (enable) {
 		/* the sensor must be enabled, and the startup sequence locks the mutex too */
 		mutex_unlock(&imx636->mutex);
-		RET_ON(pm_runtime_resume_and_get(imx636->dev));
+		// RET_ON(pm_runtime_resume_and_get(imx636->dev));
 		mutex_lock(&imx636->mutex);
 		printk(KERN_WARNING "IMX636 STREAING ENABLED\n");
 		/* I don't know if V4L2 core prevents two s_stream in parallel */
