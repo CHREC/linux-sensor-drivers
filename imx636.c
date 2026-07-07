@@ -1100,9 +1100,13 @@ static int imx636_tune_analog(struct imx636 *imx636)
  */
 static int imx636_init(struct imx636 *imx636)
 {
+	printk(KERN_WARNING "IMX636 INIT\n");
 	RET_ON(imx636_reconfigure_csi2(imx636));
+	printk(KERN_WARNING "IMX636 CSI2 Reconfigured\n");
 	RET_ON(imx636_tune_analog(imx636));
+	printk(KERN_WARNING "IMX636 TUNED\n");
 	RET_ON(imx636_apply_format(imx636, imx636->format_code));
+	printk(KERN_WARNING "IMX636 INITIALIZED");
 	imx636->initialized = true;
 	return 0;
 }
@@ -1530,6 +1534,7 @@ static void disable_power_and_clock(struct imx636 *imx636)
  */
 static int imx636_power_on(struct device *dev)
 {
+	printk(KERN_WARNING "IMX636 POWERING ON");
 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
 	struct imx636 *imx636 = to_imx636(sd);
 	int ret;
