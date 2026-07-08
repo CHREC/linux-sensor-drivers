@@ -1038,6 +1038,15 @@ static int imx636_reconfigure_csi2(struct imx636 *imx636)
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_TXCLKESC_FREQ, timings->txclkesc_freq));
 	RET_ON(imx636_write_reg(imx636, IMX636_MIPI_DPHY_PLL_DIV, timings->dphy_clk_div));
 
+       /*
+        * Specific writes to analog block
+        * Came from psee-video.c
+        * I'm not sure if its necessary but might as well try it
+        */
+       RET_ON(imx636_write_reg(imx636, 0x0010A000, 0x000B0501));
+       RET_ON(imx636_write_reg(imx636, 0x0010A008, 0x00002405));
+       RET_ON(imx636_write_reg(imx636, 0x0010A004, 0x000B0501));
+
 	/* Power up D-PHY */
 	/* The LDOs are still up, no need to re-enable them */
 	/* Re-enable power, except reference bias current */
@@ -1146,6 +1155,9 @@ static int imx636_start_streaming(struct imx636 *imx636, enum event_src src)
 		.pix_roi_slope_p = 3, /* default value */
 	};
 
+	if (!imx636->initialized)
+			RET_ON(imx636_init(imx636));
+
 	/* MIPI CSI-2 enable */
 	RET_ON(imx636_set_reg(imx636, IMX636_MIPI_CONTROL, IMX636_MIPI_CSI_ENABLE));
 
@@ -1231,7 +1243,7 @@ static int imx636_set_stream(struct v4l2_subdev *sd, int enable)
 	if (enable) {
 		/* the sensor must be enabled, and the startup sequence locks the mutex too */
 		mutex_unlock(&imx636->mutex);
-		// RET_ON(pm_runtime_resume_and_get(imx636->dev));
+		RET_ON(pm_runtime_resume_and_get(imx636->dev));
 		mutex_lock(&imx636->mutex);
 		printk(KERN_WARNING "IMX636 STREAING ENABLED\n");
 		/* I don't know if V4L2 core prevents two s_stream in parallel */
@@ -2072,7 +2084,7 @@ static int imx636_probe(struct i2c_client *client)
 
 
 	pm_runtime_set_active(imx636->dev);
-	//pm_runtime_enable(imx636->dev);
+	pm_runtime_enable(imx636->dev);
 	pm_runtime_resume(imx636->dev);
 	pm_runtime_idle(imx636->dev);
 	//pm_runtime_forbid(imx636->dev);
