@@ -685,6 +685,7 @@ static int imx636_apply_format(struct imx636 *imx636, u32 format_code)
 		return ret;
 	imx636->format_code = format_code;
 	eoi_value = eoi_pipeline_control_cfg(imx636);
+	printk(KERN_WARNING "IMX636 APPLYING EOI VALUE: %08X\n", eoi_val);
 	return imx636_write_reg(imx636, IMX636_EOI_PIPELINE_CONTROL, eoi_value);
 }
 
