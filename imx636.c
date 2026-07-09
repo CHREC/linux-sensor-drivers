@@ -2089,6 +2089,8 @@ static int imx636_probe(struct i2c_client *client)
 	pm_runtime_resume(imx636->dev);
 	pm_runtime_idle(imx636->dev);
 	//pm_runtime_forbid(imx636->dev);
+		printk(KERN_WARNING "IMX636 DRIVERS:\t0x%08X\n", IMXGIT_VER)
+
 		return 0;
 
 error_register_subdev:
